@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (int i = 0; i < numRandoms; i++) {
-        fprintf(file, "%d\n", genRand(1, 100)); // Example range: 1 to 100.
+        fprintf(file, "%d\n", genRand(10, 1000)); 
     }
 
     fclose(file);
