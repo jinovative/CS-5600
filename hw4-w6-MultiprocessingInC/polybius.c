@@ -1,3 +1,13 @@
+/*
+ * polybius.c / Asignment_4 Week6 MultiprocessingInC
+ *
+ * JinYoung Park / CS5600 / Northeastern University
+ * Spring 2025 / Feb 5, 2025
+ *
+ */
+
+
+
 #include <stdio.h>
 #include <string.h>
 #include "polybius.h"
