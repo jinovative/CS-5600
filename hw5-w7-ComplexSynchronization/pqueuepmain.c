@@ -7,36 +7,29 @@
  */
 
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
 
-#define BUF_SIZE 15     // Increased buffer capacity to 15
-
-// Global shared buffer and associated counters
-int buffer[BUF_SIZE];       // Shared buffer array
-int num = 0;                // Current number of items in the buffer
-int totalProduced = 0;      // Total number of items produced so far
-int totalConsumed = 0;      // Total number of items consumed so far
-
-// Mutex and condition variable for synchronization
+#define BUF_SIZE 15    
+int buffer[BUF_SIZE];
+int num = 0;
 pthread_mutex_t mut;
-pthread_cond_t cond;
+pthread_cond_t cond; 
 
-// Function prototypes for producer and consumer threads
+int totalProduced = 0;
+int totalConsumed = 0;
+
+
 void *producer(void *param);
 void *consumer(void *param);
 
 int main(int argc, char *argv[])
 {
-    // Create 2 producer and 2 consumer threads
     pthread_t producers[2], consumers[2];
     int i;
 
-    // Initialize the mutex and condition variable
     if(pthread_mutex_init(&mut, NULL) != 0) {
         perror("pthread_mutex_init");
         exit(1);
@@ -52,7 +45,8 @@ int main(int argc, char *argv[])
             perror("pthread_create");
             exit (1);
         }
-    }
+    } 
+
     // Create consumer threads
     for(i = 0; i < 2; i++) {
         if (pthread_create(&consumers[i], NULL, consumer, NULL) != 0) {
@@ -65,6 +59,7 @@ int main(int argc, char *argv[])
     for(i = 0; i < 2; i++) {
         pthread_join(producers[i], NULL);
     }
+
     // Wait for all consumer threads to exit
     for(i = 0; i < 2; i++) {
         pthread_join(consumers[i], NULL);
@@ -76,32 +71,32 @@ int main(int argc, char *argv[])
 
 void *producer(void *param)
 {
-    int localCount = 0;  // local counter (for demonstration)
+    int localCount = 0;  
     while(1) {
         pthread_mutex_lock(&mut);
-
-        // Check if total production limit has been reached.
+        // Check total production limit has been reached.
         if (totalProduced >= 30) {
             pthread_mutex_unlock(&mut);
             printf("Producer thread %lu: produced 30 items, exiting.\n", (unsigned long)pthread_self());
-            pthread_cond_broadcast(&cond); // Wake up any waiting threads
+            // Wake up any waiting threads
+            pthread_cond_broadcast(&cond);
             pthread_exit(NULL);
         }
         // Wait if the buffer is full.
         while (num == BUF_SIZE)
             pthread_cond_wait(&cond, &mut);
 
-        // Produce an item. We use totalProduced + 1 to generate a unique value.
+        // Item to generate a unique value.
         int item = totalProduced + 1;
         buffer[num] = item;
         num++;
         totalProduced++;
-        printf("Producer thread %lu: produced item %d, buffer size now %d, totalProduced: %d\n",
+        printf("Producer thread %lu: Item %d, Buffer size %d, Total: %d\n",
                (unsigned long)pthread_self(), item, num, totalProduced);
 
         pthread_mutex_unlock(&mut);
-        pthread_cond_broadcast(&cond);  // Signal waiting threads (both producers and consumers)
-        sleep(1);  // Simulate work (production delay)
+        pthread_cond_broadcast(&cond);
+        sleep(1);
         localCount++;
     }
     return NULL;
@@ -116,14 +111,14 @@ void *consumer(void *param)
         if (totalConsumed >= 30) {
             pthread_mutex_unlock(&mut);
             printf("Consumer thread %lu: consumed 30 items, exiting.\n", (unsigned long)pthread_self());
-            pthread_cond_broadcast(&cond); // Wake up any waiting threads
+            pthread_cond_broadcast(&cond);
             pthread_exit(NULL);
         }
         // Wait if the buffer is empty.
         while (num == 0)
             pthread_cond_wait(&cond, &mut);
 
-        // Consume an item (FIFO): remove the first item in the buffer.
+        // Remove the first item in the buffer.
         int item = buffer[0];
         // Shift the remaining items to the left.
         for (int j = 0; j < num - 1; j++) {
@@ -131,12 +126,12 @@ void *consumer(void *param)
         }
         num--;
         totalConsumed++;
-        printf("Consumer thread %lu: consumed item %d, buffer size now %d, totalConsumed: %d\n",
+        printf("Consumer thread %lu: Item %d, buffer size%d, Total: %d\n",
                (unsigned long)pthread_self(), item, num, totalConsumed);
 
         pthread_mutex_unlock(&mut);
-        pthread_cond_broadcast(&cond);  // Signal waiting threads
-        sleep(3);  // Simulate work (consumption delay)
+        pthread_cond_broadcast(&cond); 
+        sleep(3); 
     }
     return NULL;
 }

@@ -1,8 +1,17 @@
-Non-Determinism:
-Notice that in all orders the actions are “legal” but the order in which B and C enter and which waiting thread is awakened by the signal is non-deterministic. This demonstrates the potential for non-determinism in concurrent thread execution.
-
-Consistency:
-The “count” variable is updated atomically (because only one thread holds the lock at any time), so its values are consistent at the points of modification. However, the ordering of when a waiting thread resumes (and therefore which thread “finishes” its execution) depends on the scheduling and the signal’s effect.
-
-Why Inconsistency Might Occur in General:
-In more complex scenarios without proper synchronization (or with multiple shared variables and interleaving actions) you could see inconsistent or unexpected results. In our simple monitor the mutual exclusion guarantees consistency of each operation, but not the overall order in which threads complete.
+0.0, A, 4
+0.0, A, 6 [count → 1]
+0.0, A, 7
+0.0, A, 7.1 wait(C, m)
+1.0, B, 4
+1.0, B, 6 [count → 2]
+1.0, B, 7
+1.0, B, 7.1 wait(C, m)
+1.0, C, 4
+1.0, C, 6 [count → 3]
+1.0, C, 7
+1.0, C, 7.2 signal(C)
+1.0, C, 8 [count → 0]
+1.0, C, 9
+1.0, A, [resumes wait]
+1.0, A, 8 [count → 0]
+1.0, A, 9 [Thread B remains waiting]

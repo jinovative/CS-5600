@@ -16,7 +16,7 @@ void *worker(void *data)
     char *name = (char*)data;
     for (int i = 0; i < 120; i++)
     {
-        usleep(50000);  // Sleep for 50 milliseconds
+        usleep(50000);  
         printf("Hi from thread name = %s\n", name);
     }
     printf("Thread %s done!\n", name);
