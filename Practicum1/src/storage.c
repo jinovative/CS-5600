@@ -1,43 +1,57 @@
 #include "storage.h"
+#include "cache.h"  // include cache
 
-// functiton for saving message 
 void store_msg(const Message* msg) {
-    FILE* file = fopen(STORAGE_FILE, "a"); // 파일을 append 모드로 열기
+    FILE* file = fopen(STORAGE_FILE, "a");
     if (!file) {
-        fprintf(stderr, "Cannot open this file: %s\n", STORAGE_FILE);
+        fprintf(stderr, "Could not open file: %s\n", STORAGE_FILE);
         return;
     }
 
-    // Save message as binary 
     fwrite(msg, sizeof(Message), 1, file);
     fclose(file);
+
+    // Add to cache
+    Message* msg_copy = (Message*)malloc(sizeof(Message));
+    if (msg_copy) {
+        memcpy(msg_copy, msg, sizeof(Message));
+        put_in_cache(msg_copy); // Store a copy in cache
+    }
 }
 
 // Function search message on ID
 Message* retrieve_msg(int id) {
-    FILE* file = fopen(STORAGE_FILE, "r"); // Open file as read mode
+    // First check cache
+    Message* cached_msg = get_from_cache(id);
+    if (cached_msg) {
+        printf("[Cache] Message ID %d found in cache.\n", id);
+        return cached_msg;
+    }
+
+    // If not found in cache, check disk
+    FILE* file = fopen(STORAGE_FILE, "r");
     if (!file) {
-        fprintf(stderr, "Cannot open this file: %s\n", STORAGE_FILE);
+        fprintf(stderr, "Could not open file: %s\n", STORAGE_FILE);
         return NULL;
     }
 
     Message* msg = (Message*)malloc(sizeof(Message));
-    if (!msg) {
-        fprintf(stderr, "Fail to allocate\n");
-        fclose(file);
-        return NULL;
-    }
-
-    // compare each message depends on ID
     while (fread(msg, sizeof(Message), 1, file)) {
         if (msg->id == id) {
             fclose(file);
-            return msg;  // return message
+
+            // Store a copy in cache
+            Message* msg_copy = (Message*)malloc(sizeof(Message));
+            if (msg_copy) {
+                memcpy(msg_copy, msg, sizeof(Message));
+                put_in_cache(msg_copy);
+            }
+            return msg;
         }
     }
 
     fclose(file);
     free(msg);
-    return NULL;  // return NULL if not find
+    return NULL; // Not found
 }
 

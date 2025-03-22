@@ -1,30 +1,30 @@
 #include "message.h"
 #include "storage.h"
+#include "cache.h"
 
 int main() {
-    // create message
-    Message* msg1 = create_msg(1, "A", "B", "Hello, folks! How are you?");
-    if (!msg1) {
-        return 1;
-    }
+    init_cache(); // Initialize the cache
 
-    // save message
+    // Create and store a message
+    Message* msg1 = create_msg(1, "Jin", "David", "Hello David!");
     store_msg(msg1);
-    printf("Saved message: %s -> %s: \"%s\"\n",
-           msg1->sender, msg1->receiver, msg1->content);
+    printf("Message stored: %s -> %s\n", msg1->sender, msg1->receiver);
+    free(msg1); // Free original pointer (copy is cached)
 
-    // search message
-    Message* retrieved_msg = retrieve_msg(1);
-    if (retrieved_msg) {
-        printf("Result: %s -> %s: \"%s\"\n",
-               retrieved_msg->sender, retrieved_msg->receiver, retrieved_msg->content);
-        free(retrieved_msg); // release memory
-    } else {
-        printf("Cannot find message.\n");
+    // Retrieve the message (should hit cache on second access)
+    Message* fetched = retrieve_msg(1); // From disk, will be cached
+    if (fetched) {
+        printf("Retrieved: %s -> %s | %s\n", fetched->sender, fetched->receiver, fetched->content);
     }
 
-    // release allocated message
-    free(msg1);
+    Message* fetched2 = retrieve_msg(1); // From cache
+    if (fetched2) {
+        printf("Retrieved Again (Cache): %s\n", fetched2->content);
+    }
+
+    print_cache(); // print cache content
+
     return 0;
 }
+
 
