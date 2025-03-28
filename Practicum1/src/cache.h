@@ -3,18 +3,19 @@
 
 #include "message.h"
 
-#define CACHE_SIZE 16  // Maximum number of messages in cache
+#define CACHE_SIZE 16
 
-// Initializes the cache system
+// Replacement policy options
+typedef enum {
+    RANDOM_REPLACEMENT,
+    LRU_REPLACEMENT
+} ReplacementPolicy;
+
+// Public API
 void init_cache();
-
-// Retrieves a message from the cache by ID
-Message* get_from_cache(int id);
-
-// Adds a message to the cache (if full, does not replace — Part 3 will handle that)
+void set_replacement_policy(ReplacementPolicy policy);
+Message* get_from_cache(const char* id); 
 void put_in_cache(Message* msg);
-
-// Helper function to print cache content (for debugging)
 void print_cache();
 
 #endif

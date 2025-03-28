@@ -1,0 +1,53 @@
+[Cache] Message ID A found in cache.
+[Cache] Message ID B found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID E found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID D found in cache.
+[Cache] Message ID F found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID C found in cache.
+[Cache] Message ID U found in cache.
+[Cache] Message ID P found in cache.
+[Cache] Message ID H found in cache.
+[Cache] Message ID L found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID H found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID J found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID K found in cache.
+[Cache] Message ID L found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID M found in cache.
+[Cache] Message ID F found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID I found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID L found in cache.
+[Cache] Message ID G found in cache.
+[Cache] Message ID B found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID I found in cache.
+[Cache] Message ID J found in cache.
+[Cache] Message ID A found in cache.
+[Cache] Message ID K found in cache.
+[Cache] Message ID W found in cache.
+[Cache] Message ID E found in cache.
+[Cache] Message ID Q found in cache.
+[Cache] Message ID W found in cache.
+[Cache] Message ID E found in cache.
+[Cache] Message ID R found in cache.
+[Cache] Message ID M found in cache.
+[Cache] Message ID F found in cache.
+[Cache] Message ID G found in cache.
+
+=== Cache Test Report ===
+Policy: RANDOM
+Total Accesses: 93
+Cache Hits: 46
+Cache Misses: 47
+Hit Ratio: 49.46%

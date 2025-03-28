@@ -9,7 +9,6 @@
 void store_msg(const Message* msg);
 
 // Search message using ID
-Message* retrieve_msg(int id);
+Message* retrieve_msg(const char* id);
 
 #endif // STORAGE_H
-

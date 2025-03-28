@@ -20,11 +20,11 @@ void store_msg(const Message* msg) {
 }
 
 // Function search message on ID
-Message* retrieve_msg(int id) {
+Message* retrieve_msg(const char* id) {
     // First check cache
     Message* cached_msg = get_from_cache(id);
     if (cached_msg) {
-        printf("[Cache] Message ID %d found in cache.\n", id);
+        printf("[Cache] Message ID %s found in cache.\n", id);
         return cached_msg;
     }
 
@@ -37,7 +37,7 @@ Message* retrieve_msg(int id) {
 
     Message* msg = (Message*)malloc(sizeof(Message));
     while (fread(msg, sizeof(Message), 1, file)) {
-        if (msg->id == id) {
+        if (strcmp(msg->id, id) == 0) {
             fclose(file);
 
             // Store a copy in cache
@@ -54,4 +54,3 @@ Message* retrieve_msg(int id) {
     free(msg);
     return NULL; // Not found
 }
-
