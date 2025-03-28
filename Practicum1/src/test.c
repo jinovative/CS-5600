@@ -41,7 +41,9 @@ void run_cache_test(int access_count) {
 
         // Actual retrieval (may load into cache)
         Message* msg = retrieve_msg(id);
-        // We don't use the returned msg here, just simulate access
+        if (msg) {
+            printf("Accessed message ID %s\n", msg->id);
+        }
         if (!get_from_cache(id)) {
             // Should never happen because retrieve_msg loads into cache
             printf("Warning: failed to cache message %s after access.\n", id);
